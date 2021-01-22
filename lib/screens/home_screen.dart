@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_budget_ui/helpers/color_helpers.dart';
 import 'package:flutter_budget_ui/widgets/bar_chart.dart';
 
 import '../data/data.dart';
@@ -14,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildCategory(Category category, double totalAmountSpent) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.all(20.0),
       height: 100.0,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -48,7 +50,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
             ],
-          )
+          ),
+          SizedBox(height: 10.0),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final double maxBarWidth = constraints.maxWidth;
+              final double percent =
+                  (category.maxAmount - totalAmountSpent) / category.maxAmount;
+              double barWidth = percent * maxBarWidth;
+
+              if (barWidth < 0) {
+                barWidth = 0;
+              }
+              return Stack(
+                children: <Widget>[
+                  Container(
+                    height: 20.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                  Container(
+                    height: 20.0,
+                    width: barWidth,
+                    decoration: BoxDecoration(
+                      color: getColor(context, percent),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
